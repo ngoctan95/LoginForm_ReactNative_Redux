@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image, TextInput, Dimensions,StyleSheet,Text} from 'react-native';
+import {View, Image, TextInput, Dimensions,StyleSheet,Text, ActivityIndicator} from 'react-native';
 import firebase from 'firebase';
 import Button from './common/Button';
 import Card from './common/Card';
@@ -17,21 +17,18 @@ class LoginForm extends Component{
     onPasswordChanged=(text)=>{
         this.props.passwordChanged(text)
     }
-    constructor(props){
-    super(props);
-    this.state = {
-        text: "",
-        titleButton:"Login",
-        password:"",
-        email:"",
-        error:"",
-        isLoading:false
-        };
-    }
     onBtnPress=()=>{
         // console.log(this.props);
         const {email,password} = this.props;
         this.props.loginUser({email,password});
+    }
+    _render=()=>{
+        //console.log("okkkkkkkkk");
+        return(
+            <View style={{flex:1}}>
+                <ActivityIndicator animating={this.props.isLoading}/>
+            </View>
+        )
     }
     render=()=>{
         const styleTI=StyleSheet.create({
@@ -52,6 +49,7 @@ class LoginForm extends Component{
                     style={styles.styleInput}
                     onChangeText={this.onEmailChange}
                     label={"Username"}
+                    value={"tan@gmail.com"}
                     placeholder={"Input here"}/>
                 </CardSection>
                 <CardSection>
@@ -63,25 +61,31 @@ class LoginForm extends Component{
                     styleText={styles.labelInput}
                     style={styles.styleInput}
                     label={"Password"}
+                    value={"12345x@X"}
                     placeholder={"..."}/>
                 </CardSection>
                 <Text>{this.props.err}</Text>
                 <CardSection>
+                    {
+                        (this.props.isLoading)?this._render():
                         <Button text={"Login"} onPress={this.onBtnPress}></Button>
+                    }
                 </CardSection>
             </Card>
         )
     }
 }
 const mapStateToProps=(state)=>{
-    console.log("map",state);
+    // console.log("mapp",state);
+    // console.log("map",state.authReducer.isLoading?state:null);
     // {state.authReducer.signInSucceed===true?alert("ok"):console.log("fail")}
     return {
         email: state.authReducer.email,
         password:state.authReducer.password,
         isLoggedIn:state.authReducer.signInSucceed,
         status:state.authReducer.status,
-        err:state.authReducer.err
+        err:state.authReducer.err,
+        isLoading:state.authReducer.isLoading
     }
 }
 export default connect(mapStateToProps,action)(LoginForm);

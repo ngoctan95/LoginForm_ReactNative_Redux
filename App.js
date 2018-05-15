@@ -13,6 +13,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import LoginForm from './src/components/LoginForm';
 import firebase from 'firebase';
+import Router from './src/Router';
 
 
 export default class App extends Component {
@@ -30,8 +31,8 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={createStore(reducers,compose(applyMiddleware(thunk, logger)))}>
-        <View style={{flex:1,marginTop:35}}>
-          <LoginForm />
+        <View style={{flex:1}}>
+          <Router />
         </View> 
       </Provider>
     );
